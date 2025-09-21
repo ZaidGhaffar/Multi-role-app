@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends
 from auth.router import router as auth_router
+from auth.hr_router import router as hr_router
 from auth.dependencies import get_current_user
 import uvicorn
 
@@ -7,7 +8,11 @@ app = FastAPI(title="Employee Auth API")
 
 # Register Routers
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
+app.include_router(hr_router, prefix="/hr", tags=["Hr Authentication"]) 
 
+@app.get("/")
+def root():
+    return {"message": "Welcome to Neurofy API 🚀"}
 # Protected test route
 @app.get("/me")
 def read_current_user(user=Depends(get_current_user)):
