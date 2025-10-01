@@ -2,15 +2,15 @@ from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from core.config import settings
-
+import bcrypt
 # Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 def verify_password(password: str, hashed: str) -> bool:
-    return pwd_context.verify(password, hashed)
+    return bcrypt.checkpw(password.encode("utf-8"), hashed.encode("utf-8"))
 
 # JWT utilities
 def create_access_token(data: dict) -> str:
