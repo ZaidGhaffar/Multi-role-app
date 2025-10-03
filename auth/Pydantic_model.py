@@ -10,12 +10,12 @@ class Token(BaseModel):
     token_type: str = "bearer"
 
 class UserResponse(BaseModel):
-    id: str
+    user_id: str
     username: str
     role: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
     
 class HRSignup(BaseModel):
@@ -29,3 +29,8 @@ class HRLogin(BaseModel):
     password: str
 
 
+class CreateVideo(BaseModel):
+    gcp_url: str
+    oringal_filename: str
+    user_id: str
+    
