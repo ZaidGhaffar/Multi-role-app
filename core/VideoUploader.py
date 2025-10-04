@@ -6,7 +6,7 @@ import time
 
 
 class VideoUploader:
-    def __init__(self,credentials_path=r"D:\python\QuantumMind\clod_credentials.json",bucket_name="luminar-img-uploader"):
+    def __init__(self,credentials_path=r"cloud_credentials.json",bucket_name="luminar-img-uploader"):
         if credentials_path:
             os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
         
@@ -20,6 +20,7 @@ class VideoUploader:
                 expiration=timedelta(minutes=expiration_minutes),
                 method="PUT",
                 content_type=content_type,
+                headers={"Content-Type": content_type},
             )
             print(url)
             return url

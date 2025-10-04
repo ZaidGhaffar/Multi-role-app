@@ -41,8 +41,8 @@ class Users(Base):
 class Video(Base):
     __tablename__ = 'videos'
     video_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = Column(String, ForeignKey('users.id'), nullable=False)
-    gcs_file_path = Column(String, nullable=False)
+    user_id = Column(String, ForeignKey('users.user_id'), nullable=False)
+    gcs_url = Column(String, nullable=False)
     original_filename = Column(String, nullable=False)
     upload_timestamp = Column(DateTime, default=datetime.utcnow)
     is_processed = Column(Boolean, default=False)

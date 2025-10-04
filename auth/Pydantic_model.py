@@ -30,7 +30,5 @@ class HRLogin(BaseModel):
 
 
 class CreateVideo(BaseModel):
-    gcp_url: str
-    oringal_filename: str
-    user_id: str
+    original_filename: str
     
