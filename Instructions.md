@@ -60,7 +60,14 @@ The system consists of two main user types:
 ---
 
 ### Phase 2 – AI Model Integration  
-- [ ] Extract the video passing to a dummy function(name it as EmotionModel)  i'll replace it with mine actuall model later this func will return dummy top 3 emotions in the form of dict 
+- [ ]  Implement a dummy AI model function named EmotionModel that temporarily simulates predictions.This function will accept a video file path (from GCS signed URL).
+It will return dummy top 3 emotions and scores in the form of a dictionary, for example:
+predictions = {
+  "happy": 0.78,
+  "neutral": 0.15,
+  "stressed": 0.07
+}
+Later, this placeholder will be replaced with the actual deployed AI model once it’s ready.
 - [ ] Backend pipeline: Fetch video from GCS → call AI service(EmotionModel).  
 - [ ] Compute derived fields: `top_emotion`, `top_score`.
 - [ ] Store full prediction vector  fields in DB.  
@@ -70,12 +77,17 @@ The system consists of two main user types:
 ---
 
 ### Phase 3 – HR Dashboard Backend APIs  
-- [ ] `GET /hr/dashboard/emotion-distribution` → for pie/bar chart.  
+- [ ] `GET /hr/dashboard/emotion-distribution` → for all emotions (defined in card) Stress,anxiety, fatigue, happiness, Neutral Anger, suprise.  
+- [ ] `GET /hr/dashboard/emotion-pie-distribution` -> for pie charts. 
 - [ ] `GET /hr/dashboard/emotion-trend` → for line/area chart.  
-- [ ] `GET /hr/dashboard/stress-trend` → for stress index trend.  
+- [ ] `GET /hr/dashboard/emotion-histogram-distribution` -> for histgram charts. 
+- [ ] `GET /hr/dashboard/Employee-department` → for cards with Total Employee & department.  
 - [ ] `GET /hr/dashboard/summary` → for KPI cards.  
 - [ ] `GET /hr/employees` → employee table with last prediction.  
 - [ ] `GET /hr/employees/{employee_id}` → employee detail (history).  
+in short I need the complete Backend for the hr dashboard connect it with frontend & test the all Api's
+if something isn't mentioned feel free to add the code for it 
+I just wants the working dashboard of hr with complete Backend & frontend integrated in it 
 
 ---
 

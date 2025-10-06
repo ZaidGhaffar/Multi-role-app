@@ -3,6 +3,8 @@ from fastapi import FastAPI, Depends,HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from auth.router import router as auth_router
 from auth.hr_router import router as hr_router
+from routers.ai_router import router as ai_router
+from hr_Dashboard.router import router as hr_dashboard_router
 from auth.dependencies import get_current_user
 import uvicorn
 from auth.dependencies import get_db,uploader
@@ -22,7 +24,9 @@ app.add_middleware(
 
 # Register Routers
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
-app.include_router(hr_router, prefix="/hr", tags=["Hr Authentication"]) 
+app.include_router(hr_router, prefix="/hr", tags=["Hr Authentication"])
+app.include_router(ai_router, prefix="/ai", tags=["AI Processing"]) 
+app.include_router(hr_dashboard_router, tags=["HR Dashboard"])
 db_dependency = Annotated[Session,Depends(get_db)]
 
 @app.get("/")

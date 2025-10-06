@@ -57,6 +57,7 @@ class Prediction(Base):
     prediction_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     video_id = Column(String, ForeignKey('videos.video_id'), nullable=False)
     emotion_label = Column(String, nullable=False)  # e.g., "stress", "happy", "neutral"
+    score = Column(Float, nullable=False)  # Confidence score for the emotion
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # Relationship: Many Predictions belong to One Video
@@ -66,3 +67,11 @@ class Prediction(Base):
 
 # Create tables
 Base.metadata.create_all(engine)
+
+def get_db():
+    """Dependency to get database session"""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
