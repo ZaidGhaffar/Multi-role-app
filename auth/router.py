@@ -27,7 +27,8 @@ def signup(user_request: UserCreate, db: Session = Depends(get_db)):
     # Create user with existing company_id
     user = create_user(
         db=db, 
-        username=user_request.username, 
+        username=user_request.username,
+        email=user_request.email,
         password=user_request.password,
         company_id=company.id
     )

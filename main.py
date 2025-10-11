@@ -11,6 +11,7 @@ from auth.dependencies import get_db,uploader
 from sqlalchemy.orm import Session
 from auth.Pydantic_model import CreateVideo
 from Database.database import Video
+from core.scheduler import start_scheduler
 
 app = FastAPI(title="Employee Auth API")
 # Add CORS middleware
@@ -28,6 +29,9 @@ app.include_router(hr_router, prefix="/hr", tags=["Hr Authentication"])
 app.include_router(ai_router, prefix="/ai", tags=["AI Processing"]) 
 app.include_router(hr_dashboard_router, tags=["HR Dashboard"])
 db_dependency = Annotated[Session,Depends(get_db)]
+
+# Start background scheduler
+start_scheduler()
 
 @app.get("/")
 def root():

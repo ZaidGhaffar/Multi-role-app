@@ -20,6 +20,7 @@ def signup_hr(user: Pydantic_model.HRSignup, db: Session = Depends(get_db)):
 
     db_user = Users(
         username=user.email,
+        email=user.email,
         hashed_password=utils.hash_password(user.password),
         role="hr",
         company_id=company.id,
