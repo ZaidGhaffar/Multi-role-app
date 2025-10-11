@@ -3,3 +3,4 @@ passlib[bcrypt]
 python-jose[cryptography]
 sqlalchemy
 psycopg2
+APScheduler==3.10.4
