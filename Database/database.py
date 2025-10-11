@@ -23,6 +23,8 @@ class Company(Base):
     created_at = Column(DateTime,default=datetime.utcnow)
     users = relationship("Users", back_populates="company")
 
+Company.departments = relationship("Department", back_populates="company")
+
 
 # User Model
 class Users(Base):
@@ -63,6 +65,19 @@ class Prediction(Base):
     # Relationship: Many Predictions belong to One Video
     video = relationship("Video", back_populates="predictions")
     
+
+class Department(Base):
+    __tablename__ = "departments"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, unique=True, nullable=False)
+    description = Column(String, nullable=True)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Relationship with Company
+    company = relationship("Company", back_populates="departments")
+
 
 
 # Create tables

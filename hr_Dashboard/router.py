@@ -4,7 +4,7 @@ from typing import Dict, List, Optional
 from datetime import datetime, timedelta
 
 from auth.dependencies import get_current_user, get_db
-from Database.database import Users, Video, Prediction
+from Database.database import Users, Video, Prediction, Department
 
 
 router = APIRouter()
@@ -173,14 +173,15 @@ def emotion_histogram_distribution(
     return {"emotion": std, "histogram": ranges}
 
 
-@router.get("/hr/dashboard/Employee-department")
+@router.get("/hr/dashboard/employee-department")
 def employee_department(db: Session = Depends(get_db), user: Users = Depends(get_current_user)):
     assert_hr(user)
     # Department data not modeled; return totals only for now
-    total_employees = db.query(Users).filter(Users.company_id == user.company_id).count()
+    total_employees = db.query(Users).filter(Users.company_id == user.company_id).count(),
+    departments = db.query(Department).order_by(Department.name.asc()).all()
     return {
         "total_employees": total_employees,
-        "departments": [],
+        "departments": departments,
     }
 
 
@@ -222,57 +223,57 @@ def dashboard_summary(db: Session = Depends(get_db), user: Users = Depends(get_c
     }
 
 
-@router.get("/hr/employees")
-def list_employees(
-    page: int = Query(1, ge=1),
-    page_size: int = Query(10, ge=1, le=100),
-    db: Session = Depends(get_db),
-    user: Users = Depends(get_current_user),
-):
-    assert_hr(user)
-    q = db.query(Users).filter(Users.company_id == user.company_id)
-    total = q.count()
-    employees = q.order_by(Users.username.asc()).offset((page - 1) * page_size).limit(page_size).all()
+# @router.get("/hr/employees")
+# def list_employees(
+#     page: int = Query(1, ge=1),
+#     page_size: int = Query(10, ge=1, le=100),
+#     db: Session = Depends(get_db),
+#     user: Users = Depends(get_current_user),
+# ):
+#     assert_hr(user)
+#     q = db.query(Users).filter(Users.company_id == user.company_id)
+#     total = q.count()
+#     employees = q.order_by(Users.username.asc()).offset((page - 1) * page_size).limit(page_size).all()
 
-    # Get last prediction per employee (by latest prediction created_at for their latest processed video)
-    items = []
-    for emp in employees:
-        last_video = (
-            db.query(Video)
-            .filter(Video.user_id == emp.user_id, Video.is_processed == True)
-            .order_by(Video.upload_timestamp.desc())
-            .first()
-        )
-        last_pred = None
-        top_emotion = None
-        top_score = None
-        if last_video:
-            preds = db.query(Prediction).filter(Prediction.video_id == last_video.video_id).all()
-            if preds:
-                pred_map = {p.emotion_label: float(p.score) for p in preds}
-                # map keys to standard
-                std_map: Dict[str, float] = {}
-                for k, v in pred_map.items():
-                    m = map_emotion(k)
-                    if m:
-                        std_map[m] = v
-                if std_map:
-                    top_emotion = max(std_map, key=std_map.get)
-                    top_score = std_map[top_emotion]
-                last_pred = std_map
+#     # Get last prediction per employee (by latest prediction created_at for their latest processed video)
+#     items = []
+#     for emp in employees:
+#         last_video = (
+#             db.query(Video)
+#             .filter(Video.user_id == emp.user_id, Video.is_processed == True)
+#             .order_by(Video.upload_timestamp.desc())
+#             .first()
+#         )
+#         last_pred = None
+#         top_emotion = None
+#         top_score = None
+#         if last_video:
+#             preds = db.query(Prediction).filter(Prediction.video_id == last_video.video_id).all()
+#             if preds:
+#                 pred_map = {p.emotion_label: float(p.score) for p in preds}
+#                 # map keys to standard
+#                 std_map: Dict[str, float] = {}
+#                 for k, v in pred_map.items():
+#                     m = map_emotion(k)
+#                     if m:
+#                         std_map[m] = v
+#                 if std_map:
+#                     top_emotion = max(std_map, key=std_map.get)
+#                     top_score = std_map[top_emotion]
+#                 last_pred = std_map
 
-        items.append(
-            {
-                "user_id": emp.user_id,
-                "username": emp.username,
-                "last_video_id": last_video.video_id if last_video else None,
-                "last_prediction": last_pred,
-                "top_emotion": top_emotion,
-                "top_score": top_score,
-            }
-        )
+#         items.append(
+#             {
+#                 "user_id": emp.user_id,
+#                 "username": emp.username,
+#                 "last_video_id": last_video.video_id if last_video else None,
+#                 "last_prediction": last_pred,
+#                 "top_emotion": top_emotion,
+#                 "top_score": top_score,
+#             }
+#         )
 
-    return {"total": total, "page": page, "page_size": page_size, "items": items}
+#     return {"total": total, "page": page, "page_size": page_size, "items": items}
 
 
 @router.get("/hr/employees/{employee_id}")
@@ -317,3 +318,72 @@ def employee_detail(employee_id: str, db: Session = Depends(get_db), user: Users
     }
 
 
+##############################
+@router.get("/hr/employees")
+def list_employees(
+    page: int = Query(1, ge=1),
+    page_size: int = Query(10, ge=1, le=100),
+    db: Session = Depends(get_db),
+    user: Users = Depends(get_current_user),
+):
+    # ✅ Ensure user is HR
+    assert_hr(user)
+
+    # ✅ Get only employees (non-HR) from same company
+    q = (
+        db.query(Users)
+        .filter(
+            Users.company_id == user.company_id,
+            Users.role != "hr"  # exclude HRs
+        )
+    )
+
+    total = q.count()
+    employees = (
+        q.order_by(Users.username.asc())
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+        .all()
+    )
+
+    items = []
+    for emp in employees:
+        last_video = (
+            db.query(Video)
+            .filter(Video.user_id == emp.user_id, Video.is_processed == True)
+            .order_by(Video.upload_timestamp.desc())
+            .first()
+        )
+
+        last_pred = None
+        top_emotion = None
+        top_score = None
+
+        if last_video:
+            preds = db.query(Prediction).filter(Prediction.video_id == last_video.video_id).all()
+            if preds:
+                pred_map = {p.emotion_label: float(p.score) for p in preds}
+                std_map = {}
+                for k, v in pred_map.items():
+                    m = map_emotion(k)
+                    if m:
+                        std_map[m] = v
+                if std_map:
+                    top_emotion = max(std_map, key=std_map.get)
+                    top_score = std_map[top_emotion]
+                last_pred = std_map
+
+        items.append(
+            {
+                "user_id": emp.user_id,
+                "username": emp.username,
+                "email": emp.email,
+                "role": emp.role,
+                "last_video_id": last_video.video_id if last_video else None,
+                "last_prediction": last_pred,
+                "top_emotion": top_emotion,
+                "top_score": top_score,
+            }
+        )
+
+    return {"total": total, "page": page, "page_size": page_size, "items": items}
