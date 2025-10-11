@@ -4,7 +4,7 @@ from jose import JWTError
 from sqlalchemy.orm import Session
 from Database.database import Users,SessionLocal
 from core.security import decode_access_token
-
+from core.VideoUploader import VideoUploader
 # OAuth2 scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
@@ -31,3 +31,5 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
 
     return user
+
+uploader = VideoUploader()
