@@ -1,8 +1,8 @@
 from pydantic import BaseModel, EmailStr
 
 class UserCreate(BaseModel):
-    username: str
-    email: str # Added email field
+    #username: str
+    email: EmailStr # Added email field
     password: str
     company_name: str
 
@@ -12,7 +12,7 @@ class Token(BaseModel):
 
 class UserResponse(BaseModel):
     user_id: str
-    username: str
+    email: str
     role: str
 
     class Config:
@@ -26,10 +26,14 @@ class HRSignup(BaseModel):
 
 
 class HRLogin(BaseModel):
-    username: EmailStr
+    email: EmailStr
     password: str
 
 
 class CreateVideo(BaseModel):
     original_filename: str
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
     

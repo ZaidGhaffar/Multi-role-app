@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 from Database.database import Users, Company
 from core.security import hash_password, verify_password
 
-def get_user_by_username(db: Session, username: str):
-    return db.query(Users).filter(Users.username == username).first()
+def get_user_by_username(db: Session, email: str):
+    return db.query(Users).filter(Users.email == email).first()
 
 def get_company_by_name(db: Session, company_name: str):
     """Get company by name if it exists, return None if not found"""
@@ -23,9 +23,8 @@ def get_or_create_company(db: Session, company_name: str):
     db.refresh(company)
     return company
 
-def create_user(db: Session, username: str, password: str, company_id: str, email: str = None, role: str = "employee"):
+def create_user(db: Session, email: str, password: str, company_id: str, role: str = "employee"):
     user = Users(
-        username=username,
         email=email,
         hashed_password=hash_password(password),
         role=role,
@@ -36,8 +35,8 @@ def create_user(db: Session, username: str, password: str, company_id: str, emai
     db.refresh(user)
     return user
 
-def authenticate_user(db: Session, username: str, password: str):
-    user = get_user_by_username(db, username)
+def authenticate_user(db: Session, email: str, password: str):
+    user = get_user_by_username(db, email)
     if not user:
         return None
     if not verify_password(password, user.hashed_password):

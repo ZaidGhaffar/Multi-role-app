@@ -39,7 +39,7 @@ def root():
 # Protected test route
 @app.get("/me")
 def read_current_user(user=Depends(get_current_user)):
-    return {"id": user.user_id, "username": user.username, "role": user.role}
+    return {"id": user.user_id, "email": user.email, "role": user.role}
 
 
 @app.get("/generate_signed_url")

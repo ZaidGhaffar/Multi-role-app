@@ -30,7 +30,7 @@ Company.departments = relationship("Department", back_populates="company")
 class Users(Base):
     __tablename__ = "users"
     user_id = Column(String, primary_key=True, default= lambda: str(uuid.uuid4()))
-    username = Column(String,nullable=False)
+    #username = Column(String,nullable=False)
     email = Column(String, nullable=True)  # Add email field
     hashed_password = Column(String, nullable=False)
     role = Column(String, default="employee")  # Store role in DB (employee/hr/etc.)

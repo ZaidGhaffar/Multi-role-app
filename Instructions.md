@@ -88,14 +88,15 @@ Later, this placeholder will be replaced with the actual deployed AI model once 
 in short I need the complete Backend for the hr dashboard connect it with frontend & test the all Api's
 if something isn't mentioned feel free to add the code for it 
 I just wants the working dashboard of hr with complete Backend & frontend integrated in it 
+you can write code for Backend in hr_Dashboard folder import it & than use it in main.py file 
 
 ---
 
-### Phase 4 – HR Dashboard Frontend  
+<!-- ### Phase 4 – HR Dashboard Frontend  
 - [ ] Build **cards** (summary KPIs: total videos, active employees, avg stress, etc.).  
 - [ ] Build **3 graphs** (emotion distribution, emotion trend, stress trend).  
 - [ ] Build **employee table** with search, sort, pagination.  
-- [ ] Build **employee detail view** (modal/page showing prediction history).  
+- [ ] Build **employee detail view** (modal/page showing prediction history).   -->
 
 ---
 

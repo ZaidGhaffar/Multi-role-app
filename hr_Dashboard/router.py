@@ -313,7 +313,7 @@ def employee_detail(employee_id: str, db: Session = Depends(get_db), user: Users
 
     return {
         "user_id": emp.user_id,
-        "username": emp.username,
+        "email": emp.email,
         "history": history,
     }
 
@@ -340,7 +340,7 @@ def list_employees(
 
     total = q.count()
     employees = (
-        q.order_by(Users.username.asc())
+        q.order_by(Users.email.asc())
         .offset((page - 1) * page_size)
         .limit(page_size)
         .all()
@@ -376,7 +376,6 @@ def list_employees(
         items.append(
             {
                 "user_id": emp.user_id,
-                "username": emp.username,
                 "email": emp.email,
                 "role": emp.role,
                 "last_video_id": last_video.video_id if last_video else None,

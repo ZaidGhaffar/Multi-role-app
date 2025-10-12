@@ -40,7 +40,7 @@ def test_company_creation_flow():
         hr_user = response.json()
         print(f"✅ HR Account Created:")
         print(f"   - ID: {hr_user['id']}")
-        print(f"   - Username: {hr_user['username']}")
+        print(f"   - email: {hr_user['email']}")
         print(f"   - Role: {hr_user['role']}")
         print(f"   - Company 'Tech Corp' has been created!")
     else:
@@ -52,7 +52,7 @@ def test_company_creation_flow():
     print("-" * 50)
     
     hr_login_data = {
-        "username": "hr@techcorp.com",
+        "email": "hr@techcorp.com",
         "password": "hrpassword123"
     }
     
@@ -72,12 +72,12 @@ def test_company_creation_flow():
     print("-" * 50)
     
     employee_data = {
-        "username": "john.doe@techcorp.com",
+        "email": "john.doe@techcorp.com",
         "password": "employeepassword123",
         "company_name": "Tech Corp"  # Same company as HR created
     }
     
-    print(f"Creating employee account for: {employee_data['username']}")
+    print(f"Creating employee account for: {employee_data['email']}")
     print(f"Company name: {employee_data['company_name']}")
     
     response = requests.post(f"{BASE_URL}/auth/signup", json=employee_data)
@@ -87,7 +87,7 @@ def test_company_creation_flow():
         employee_user = response.json()
         print(f"✅ Employee Account Created:")
         print(f"   - ID: {employee_user['id']}")
-        print(f"   - Username: {employee_user['username']}")
+        print(f"   - email: {employee_user['email']}")
         print(f"   - Role: {employee_user['role']}")
         print(f"   - Associated with existing company 'Tech Corp'!")
     else:
@@ -98,12 +98,12 @@ def test_company_creation_flow():
     print("-" * 50)
     
     invalid_employee_data = {
-        "username": "jane.smith@fakecompany.com",
+        "email": "jane.smith@fakecompany.com",
         "password": "employeepassword123",
         "company_name": "Fake Company"  # Company doesn't exist
     }
     
-    print(f"Trying to create employee account for: {invalid_employee_data['username']}")
+    print(f"Trying to create employee account for: {invalid_employee_data['email']}")
     print(f"Company name: {invalid_employee_data['company_name']}")
     print("(This should FAIL because company doesn't exist)")
     
@@ -139,7 +139,7 @@ def test_company_creation_flow():
         hr2_user = response.json()
         print(f"✅ Second HR Account Created:")
         print(f"   - ID: {hr2_user['id']}")
-        print(f"   - Username: {hr2_user['username']}")
+        print(f"   - email: {hr2_user['email']}")
         print(f"   - Role: {hr2_user['role']}")
         print(f"   - Company 'Startup Inc' has been created!")
     else:
@@ -150,12 +150,12 @@ def test_company_creation_flow():
     print("-" * 50)
     
     employee2_data = {
-        "username": "alice.johnson@startup.com",
+        "email": "alice.johnson@startup.com",
         "password": "employeepassword123",
         "company_name": "Startup Inc"
     }
     
-    print(f"Creating employee account for: {employee2_data['username']}")
+    print(f"Creating employee account for: {employee2_data['email']}")
     print(f"Company name: {employee2_data['company_name']}")
     
     response = requests.post(f"{BASE_URL}/auth/signup", json=employee2_data)
@@ -211,7 +211,7 @@ def test_case_insensitive_company_names():
     
     # Try employee signup with different case
     case_test_data = {
-        "username": "test.case@techcorp.com",
+        "email": "test.case@techcorp.com",
         "password": "employeepassword123",
         "company_name": "TECH CORP"  # Different case
     }
@@ -226,7 +226,7 @@ def test_case_insensitive_company_names():
         employee_user = response.json()
         print(f"✅ Case Insensitive Test Passed:")
         print(f"   - Employee created successfully")
-        print(f"   - Username: {employee_user['username']}")
+        print(f"   - email: {employee_user['email']}")
         print(f"   - Role: {employee_user['role']}")
         print("   - Company name matching is case insensitive!")
     else:
