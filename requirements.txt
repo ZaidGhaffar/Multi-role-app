@@ -2,5 +2,5 @@ fastapi[standard]
 passlib[bcrypt]
 python-jose[cryptography]
 sqlalchemy
-psycopg2
+psycopg2-binary
 APScheduler==3.10.4
