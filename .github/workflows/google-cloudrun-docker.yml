@@ -35,7 +35,7 @@ on:
 
 env:
   PROJECT_ID: 'neurofy-474317' # TODO: update to your Google Cloud project ID
-  GAR_NAME: 'Images for cloud-repo-for-docker-images' # TODO: update to your Artifact Registry repository name
+  GAR_NAME: 'cloud-repo-for-docker-images' # TODO: update to your Artifact Registry repository name
   GAR_LOCATION: 'asia-south1'
   REGION: 'asia-south1' # TODO: update to your region
   SERVICE: 'neurofy-backenda-app' # TODO: update to your service name
