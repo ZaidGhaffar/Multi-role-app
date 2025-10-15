@@ -16,3 +16,5 @@ Deployed AI service to process uploaded videos.
 Predicts emotional states (e.g., anger, stress, happiness, etc.).
 Results stored in the database and mapped to corresponding employees.
 API endpoints to retrieve predictions for HR dashboard.
+Running...
+
